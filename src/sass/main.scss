@@ -720,3 +720,7 @@ input:checked + .slider:before {
   opacity: 1;
   transition: 0.8s;
 }
+
+.songActive {
+  color: #cb8169;
+}

@@ -31,16 +31,10 @@ const playList = document.querySelector(".play-list");
 const background = document.querySelector(".background");
 const backgroundList = document.querySelector(".background-list");
 let listSource = backgroundList.querySelectorAll(".background-list_item");
-let backgroundActive = listSource[0].textContent;
+let backgroundActive = "The Rolling Scopes School";
 city.value = "Minsk";
 let isPlay = false;
 let numSong = 0;
-const greetingTranslation = {
-  "ru-mor": "Доброe",
-  "ru-day": "Добрый",
-  "ru-nig": "Доброй",
-  en: "Good",
-};
 const languagesItems = document.querySelectorAll(".languages-list__item");
 const languages = document.querySelector(".languages");
 const languagesList = document.querySelector(".languages-list");
@@ -141,17 +135,21 @@ function getTimeOfDay(language) {
   const date = new Date();
   const hours = date.getHours();
   let timeOfDay;
+  let greetingWord;
   if (hours >= 0 && hours < 6) {
     language == "ru" ? (timeOfDay = "ночи") : (timeOfDay = "night");
+    language == "ru" ? (greetingWord = "Доброй") : (greetingWord = "Good");
   } else if (hours >= 6 && hours < 12) {
     language == "ru" ? (timeOfDay = "утро") : (timeOfDay = "morning");
+    language == "ru" ? (greetingWord = "Доброе") : (greetingWord = "Good");
   } else if (hours >= 12 && hours < 18) {
     language == "ru" ? (timeOfDay = "день") : (timeOfDay = "afternoon");
+    language == "ru" ? (greetingWord = "Добрый") : (greetingWord = "Good");
   } else {
     language == "ru" ? (timeOfDay = "вечер") : (timeOfDay = "evening");
+    language == "ru" ? (greetingWord = "Добрый") : (greetingWord = "Good");
   }
-  if (hours >= 0 && hours < 6)
-    greeting.textContent = `${greetingTranslation[language]} ${timeOfDay}`;
+  greeting.textContent = `${greetingWord} ${timeOfDay}`;
   return timeOfDay;
 }
 
@@ -168,6 +166,11 @@ function setLocalStorage() {
   localStorage.setItem("myName", myName.value);
   localStorage.setItem("city", city.value);
 }
+function languageGreetingPlaceholder() {
+  state.language == "ru"
+    ? (myName.placeholder = "[Введите имя]")
+    : (myName.placeholder = "[Write name:]");
+}
 
 function getRandomNum() {
   let bgNum = 1 + Math.floor(Math.random() * 20);
@@ -175,7 +178,6 @@ function getRandomNum() {
 }
 
 function setBg(bgNum) {
-  console.log("one");
   listSource[0].classList.add("item-active");
   let numImg = "";
   let timeOfDay = getTimeOfDay("en");
@@ -224,7 +226,6 @@ function getSlidePrev() {
 }
 
 async function getLinkToImage(dataBackground) {
-  console.log("third");
   let timeOfDay = getTimeOfDay("en");
   const url = `https://api.unsplash.com/photos/random?query=${dataBackground}&client_id=UvhvAbs-46QHertW_43aBtFMLgoi9H6oMZZWAXqrkiM`;
   const res = await fetch(url);
@@ -238,7 +239,6 @@ async function getLinkToImage(dataBackground) {
 }
 
 async function getLinkToImageFlickr(dataBackground) {
-  console.log("second");
   let timeOfDay = getTimeOfDay("en");
   const url = `https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key=1c4e26e0ace2f0ca9e27b3c2b26ca4e9&tags=${dataBackground}&extras=url_l&format=json&nojsoncallback=1`;
   const res = await fetch(url);
@@ -312,6 +312,10 @@ function playAudio(id) {
 
   isPlay = true;
   audio.addEventListener("ended", playNextChange);
+  document.querySelectorAll(".track-item").forEach((item, index) => {
+    item.classList.remove("songActive");
+    if (index == numSong) item.classList.add("songActive");
+  });
 }
 
 function playSongs(idSong) {
@@ -382,6 +386,10 @@ function playPrevChange() {
   currentTimeSongs = 0;
   playAudio();
   play.classList.add("pause");
+  buttonTrackList.forEach((item) => {
+    item.classList.remove("pause");
+  });
+  buttonTrackList[numSong].classList.add("pause");
 }
 
 function changeVolume(e) {
@@ -418,8 +426,11 @@ backgroundList.addEventListener("click", (event) => {
   let current = event.target.closest(".background-list_item");
   listSource.forEach((item) => {
     item.querySelector(".jackdaw").classList.remove("selected");
-    if (item.textContent == current.textContent) {
-      backgroundActive = current.textContent;
+    if (
+      item.querySelector(".titleSource").textContent ==
+      current.querySelector(".titleSource").textContent
+    ) {
+      backgroundActive = current.querySelector(".titleSource").textContent;
       item.querySelector(".jackdaw").classList.add("selected");
       if (backgroundActive == "The Rolling Scopes School") {
         setBg(randomNum);
@@ -443,6 +454,9 @@ languagesList.addEventListener("click", (event) => {
       item.querySelector(".jackdaw").classList.add("selected");
       quote.textContent = `"${dataQuotes[numQuote][state.language].text}"`;
       author.textContent = `${dataQuotes[numQuote][state.language].author}`;
+      settingsIitemTitleChange();
+      languageTodoChange();
+      languageGreetingPlaceholder();
     }
   });
 });
@@ -495,13 +509,24 @@ buttonBackground.addEventListener("click", () => {
 });
 
 const btnAddTask = document.querySelector(".add-task");
-const inputTask = document.querySelector(".text-task");
+let inputTask = document.querySelector(".text-task");
 const inputTaskList = document.querySelector(".todo__list");
 let numOfTask = 0;
 let quantityItems = 0;
+let titleTodo = document.querySelector(".todo .title");
+
+function languageTodoChange() {
+  state.language == "ru"
+    ? (titleTodo.textContent = "Список дел:")
+    : (titleTodo.textContent = "Todolist:");
+  state.language == "ru"
+    ? (inputTask.placeholder = "введите название")
+    : (inputTask.placeholder = "wtite:");
+}
 
 function getTask() {
   if (quantityItems == 10) return;
+  if (!inputTask.value) return;
   let task = document.createElement("div");
   task.id = "task-" + `${numOfTask + 1}`;
   numOfTask++;
@@ -540,3 +565,35 @@ settingBtn.addEventListener("click", () => {
   languages.classList.remove("setting-visible-elems");
   background.classList.remove("setting-visible-elems");
 });
+
+const settingsIitemTitle = document.querySelectorAll(".settings-item__title");
+const settingsIitemTitleValues = {
+  ru: [
+    "Язык",
+    "Путь к фото",
+    "Время",
+    "Дата",
+    "Приветствие",
+    "Цитата",
+    "Погода",
+    "Аудио",
+    "Список дел",
+  ],
+  en: [
+    "Language",
+    "PhotoSource",
+    "Time",
+    "Date",
+    "Greeting",
+    "Quote",
+    "Weather",
+    "Audio",
+    "Todolist",
+  ],
+};
+
+function settingsIitemTitleChange() {
+  settingsIitemTitle.forEach((item, index) => {
+    item.textContent = `${settingsIitemTitleValues[state.language][index]}`;
+  });
+}

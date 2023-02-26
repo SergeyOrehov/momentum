@@ -54,7 +54,7 @@
         <div class="settings">
           <ul class="settings-list">
             <li class="settings-item">
-              <p>Language</p>
+              <p class="settings-item__title">Язык</p>
               <button class="nextSet button-language">
                 <img
                   src="assets/svg/arrow-right.png"
@@ -64,7 +64,7 @@
               </button>
             </li>
             <li class="settings-item">
-              <p>PhotoSource</p>
+              <p class="settings-item__title">Путь к фото</p>
               <button class="nextSet button-background">
                 <img
                   src="assets/svg/arrow-right.png"
@@ -74,49 +74,49 @@
               </button>
             </li>
             <li class="settings-item">
-              <p>Time</p>
+              <p class="settings-item__title">Время</p>
               <label id="switch-time" class="switch">
                 <input class="input" type="checkbox" checked />
                 <span class="slider round"></span>
               </label>
             </li>
             <li class="settings-item">
-              <p>Date</p>
+              <p class="settings-item__title">Дата</p>
               <label id="switch-date" class="switch">
                 <input type="checkbox" checked />
                 <span class="slider round"></span>
               </label>
             </li>
             <li class="settings-item">
-              <p>Greeting</p>
+              <p class="settings-item__title">Приветствие</p>
               <label id="switch-greeting" class="switch">
                 <input type="checkbox" checked />
                 <span class="slider round"></span>
               </label>
             </li>
             <li class="settings-item">
-              <p>Quote</p>
+              <p class="settings-item__title">Цитата</p>
               <label id="switch-quote" class="switch">
                 <input type="checkbox" checked />
                 <span class="slider round"></span>
               </label>
             </li>
             <li class="settings-item">
-              <p>Weather</p>
+              <p class="settings-item__title">Погода</p>
               <label id="switch-weather" class="switch">
                 <input type="checkbox" checked />
                 <span class="slider round"></span>
               </label>
             </li>
             <li class="settings-item">
-              <p>Audio</p>
+              <p class="settings-item__title">Аудио</p>
               <label id="switch-audio" class="switch">
                 <input type="checkbox" checked />
                 <span class="slider round"></span>
               </label>
             </li>
             <li class="settings-item">
-              <p>Todolist</p>
+              <p class="settings-item__title">Список дел</p>
               <label id="switch-todolist" class="switch">
                 <input type="checkbox" checked />
                 <span class="slider round"></span>
@@ -149,7 +149,7 @@
         <div class="background">
           <ul class="background-list">
             <li class="background-list_item">
-              <p>The Rolling Scopes School</p>
+              <p class="titleSource">The Rolling Scopes School</p>
               <img
                 class="jackdaw selected"
                 src="assets/svg/kisspng.png"
@@ -158,7 +158,7 @@
               />
             </li>
             <li class="background-list_item">
-              <p>Unsplash API</p>
+              <p class="titleSource">Unsplash API</p>
               <img
                 class="jackdaw"
                 src="assets/svg/kisspng.png"
@@ -174,7 +174,7 @@
               </button>
             </li>
             <li class="background-list_item">
-              <p>Flickr API</p>
+              <p class="titleSource">Flickr API</p>
               <img
                 class="jackdaw"
                 src="assets/svg/kisspng.png"
@@ -306,13 +306,13 @@
           <p>Settings</p>
         </div>
         <div class="todo">
-          <h2 class="title">Список моих дел на сегодня:</h2>
+          <h2 class="title">Список дел:</h2>
           <ul class="todo__list"></ul>
           <input
             class="text-task"
             type="text"
             maxlength="30"
-            placeholder="write"
+            placeholder="введите название"
           />
           <button class="add-task">Add</button>
         </div>
