@@ -77,9 +77,54 @@ let state = {
   "Flickr API": getLinkToImageFlickr,
 };
 
+let stateStatus = {
+  "switch-time": true,
+  "switch-date": true,
+  "switch-greeting": true,
+  "switch-quote": true,
+  "switch-weather": true,
+  "switch-audio": true,
+  "switch-todolist": true,
+};
+
+function getLocalStorage() {
+  if (localStorage.getItem("myName")) {
+    myName.value = localStorage.getItem("myName");
+  }
+  if (localStorage.getItem("city")) {
+    city.value = localStorage.getItem("city");
+  }
+  if (JSON.parse(localStorage.getItem("stateStatus"))) {
+    stateStatus = JSON.parse(localStorage.getItem("stateStatus"));
+    getState();
+  }
+}
+
+function setLocalStorage() {
+  localStorage.setItem("myName", myName.value);
+  localStorage.setItem("city", city.value);
+  localStorage.setItem("stateStatus", JSON.stringify(stateStatus));
+}
+
 window.addEventListener("beforeunload", setLocalStorage);
 window.addEventListener("load", getLocalStorage);
 document.addEventListener("DOMContentLoaded", getWeather);
+
+function getState() {
+  for (let elem in stateStatus) {
+    if (!stateStatus[elem]) {
+      state[elem].classList.add("visible");
+    }
+  }
+  settingsItems.forEach((item) => {
+    let current = item.querySelector(".switch .input");
+    if (stateStatus[item.id]) {
+      current.checked = true;
+    } else {
+      current.checked = false;
+    }
+  });
+}
 
 btnFlickr.addEventListener("click", () => {
   tagsBackground.classList.toggle("tags-visible");
@@ -106,6 +151,7 @@ function settingsChange(elem) {
   for (let item in state) {
     if (elem == item) {
       state[item].classList.toggle("visible");
+      stateStatus[item] = !stateStatus[item];
     }
   }
 }
@@ -153,23 +199,17 @@ function getTimeOfDay(language) {
   return timeOfDay;
 }
 
-function getLocalStorage() {
-  if (localStorage.getItem("myName")) {
-    myName.value = localStorage.getItem("myName");
-  }
-  if (localStorage.getItem("city")) {
-    city.value = localStorage.getItem("city");
-  }
-}
-
-function setLocalStorage() {
-  localStorage.setItem("myName", myName.value);
-  localStorage.setItem("city", city.value);
-}
 function languageGreetingPlaceholder() {
   state.language == "ru"
     ? (myName.placeholder = "[Введите имя]")
     : (myName.placeholder = "[Write name:]");
+}
+
+let settingsTitle = document.querySelector(".settings-title");
+function settingsTitleChange() {
+  state.language == "ru"
+    ? (settingsTitle.textContent = "Настройки")
+    : (settingsTitle.textContent = "Settings");
 }
 
 function getRandomNum() {
@@ -457,6 +497,7 @@ languagesList.addEventListener("click", (event) => {
       settingsIitemTitleChange();
       languageTodoChange();
       languageGreetingPlaceholder();
+      settingsTitleChange();
     }
   });
 });
@@ -557,14 +598,16 @@ const settings = document.querySelector(".settings");
 
 const settingBtn = document.querySelector(".setting-btn");
 
-settingBtn.addEventListener("click", () => {
+function closeModal() {
   settings.classList.toggle("settings-visible");
   languages.classList.toggle("show");
   background.classList.toggle("show");
   tagsBackground.classList.remove("tags-visible");
   languages.classList.remove("setting-visible-elems");
   background.classList.remove("setting-visible-elems");
-});
+}
+
+settingBtn.addEventListener("click", closeModal);
 
 const settingsIitemTitle = document.querySelectorAll(".settings-item__title");
 const settingsIitemTitleValues = {
